@@ -1,13 +1,22 @@
-import React from 'react';
-import { View, Text } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
 
-export default function SearchBar() {
+export default function SearchBar(props) {
+    const [city, setCity] = useState();
+    const onChange = (text) => {
+        setCity(text);
+     }
   return (
     <View style={{marginTop:15, flexDirection:"row"}}>
+    {/* can not create account to call api GG Places (must billing :v) */}
       <GooglePlacesAutocomplete
+        textInputProps={{
+            onChangeText: onChange
+            }}
+        query={{key: ""}}
         placeholder = "Search..."
         styles={{
             textInput:{
@@ -30,7 +39,13 @@ export default function SearchBar() {
             </View>
         )}
         renderRightButton={()=>(
-            <View
+           <TouchableOpacity onPress={()=>{
+               if(city==""){
+                   setCity("Little Saigon");
+               }
+               props.setCity(city);
+           }}>
+                <View
                 style={{
                     flexDirection:"row",
                     marginRight: 8,
@@ -40,9 +55,9 @@ export default function SearchBar() {
                     alignItems:"center",
                 }}
             >
-                <AntDesign name='clockcircle' size={11} style={{marginRight:6}} />
-                <Text>Search</Text>
+                <Entypo name='magnifying-glass' size={20}  /> 
             </View>
+           </TouchableOpacity>
         )}
       />
     </View>

@@ -4,7 +4,7 @@ import { View, Text, Image } from 'react-native';
 export default function Loading() {
   return (
     <View style={{
-        height:450,
+        height:600,
         backgroundColor:"#fff",
         marginTop:10
     }}>
