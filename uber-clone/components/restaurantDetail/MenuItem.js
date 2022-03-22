@@ -1,7 +1,10 @@
 import { View, Text, StyleSheet, Image, ScrollView, FlatList} from 'react-native'
 import React from 'react'
 import { Divider } from 'react-native-elements'
-const foods=[
+import BouncyCheckbox from 'react-native-bouncy-checkbox'
+import { useDispatch, useSelector } from 'react-redux'
+
+const foodsTest=[
     {
         title: "Test 1",
         description: "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
@@ -51,24 +54,47 @@ const foods=[
         image: "https://www.englishclub.com/images/vocabulary/food/good-foods.jpg"
     },
 ]
+export default function MenuItem({restaurantName, foods, hideCheckBox}) {
+    foods?foods=foods:foods=foodsTest;
+    const dispatch = useDispatch();
+    const selectedItem = (item, checkboxValue) => 
+    dispatch({
+        type:"ADD_TO_CART",
+        payload:{
+            ...item,
+            restaurantName:restaurantName,
+            checkboxValue:checkboxValue,
+        }
+    });
 
-export default function MenuItem() {
+    const cartItems = useSelector((state)=>state.cartReducer.selectedItem.items);
+    const isFoodCart = (food, cartItems) => Boolean(cartItems.find((item)=>item.title===food.title));
     return (
         <ScrollView showsVerticalScrollIndicator={false} >
             {foods.map((food, index)=>(
                 <View key={index}>
                     <View  style={styles.MenuItem}>
+                        {hideCheckBox?(<></>):
+                        (<BouncyCheckbox
+                            iconStyle={{
+                                borderRadius: 5,
+                                borderColor:"gray"
+                            }}
+                            fillColor="green"
+                            onPress={(checkboxValue)=>selectedItem(food, checkboxValue)}
+                            isChecked={isFoodCart(food, cartItems)}
+                        />)
+                        }
                         <FoodInfo food={food}/>
                         <FoodImage food={food}/>
                     </View>
-                    <Divider width={0.5}/>
+                    <Divider width={0.5} orientation="vertical" style={{marginHorizontal:20}}/>
                 </View>
             ))} 
-        </ScrollView>
+        </ScrollView>  
        
     )
 }
-
 const FoodInfo = (props)=>(
     <View style={styles.foodInfo}>
         <Text style={styles.title}>{props.food.title}</Text>
