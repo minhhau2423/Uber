@@ -7,7 +7,7 @@ import RestaurantDetail from './screens/RestaurantDetail';
 
 export default function App() {
   return (
-    // navigation
+    // navigation --ver 2
     <RootNavigation/>
   );
 }
